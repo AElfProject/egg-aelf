@@ -6,8 +6,7 @@
  * @property {String} SOME_KEY - some description
  */
 exports.aelf = {
+    initRequestLimit: 20, // default: 20
     app: true,
-    name: 'test zz',
-    age: 'test 26',
     metaSource: 'http://127.0.0.1:7101/api/nodes/info'
 };
