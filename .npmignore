@@ -1,0 +1,5 @@
+./dist
+.idea/
+.nuget/
+.vscode/
+.node-xmlhttprequest-*
