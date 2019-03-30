@@ -1,6 +1,6 @@
 {
   "name": "egg-aelf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aelf easy plugin for egg",
   "eggPlugin": {
     "name": "aelf"
@@ -11,7 +11,7 @@
     "egg-plugin"
   ],
   "dependencies": {
-    "aelf-sdk": "^2.1.4"
+    "aelf-sdk": "^2.1.12"
   },
   "devDependencies": {
     "autod": "^3.0.1",
