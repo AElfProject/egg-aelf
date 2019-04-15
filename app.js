@@ -42,15 +42,17 @@ module.exports = app => {
 class AelfEgg {
     constructor(aelf, config) {
         this.config = JSON.parse(JSON.stringify(config));
+        this.httpProvider = this.config.httpProvider;
         this.aelf = aelf;
         this.aelf.initInstance = this.initInstance.bind(this);
         this.aelf.initContractInstance = this.initContractInstance.bind(this);
     }
 
     initInstance(url) {
-        const httpProvider = url.includes('/chain') ? url : url + '/chain';
-        const aelf = new Aelf(new Aelf.providers.HttpProvider(httpProvider));
-        this.aelf.instances[httpProvider] = aelf;
+        let httpProvider = Array.from(this.httpProvider);
+        httpProvider[0] = httpProvider[0] || url.includes('/chain') ? url : url + '/chain';
+        const aelf = new Aelf(new Aelf.providers.HttpProvider(...httpProvider));
+        this.aelf.instances[httpProvider[0]] = aelf;
     }
 
     // {
@@ -77,10 +79,12 @@ class AelfEgg {
                 rpc_domain
             } = apiInfo;
 
-            let httpProvider = rpc_ip || rpc_domain;
-            httpProvider = httpProvider.includes('/chain') ? httpProvider : httpProvider + '/chain';
-            const aelf = new Aelf(new Aelf.providers.HttpProvider(httpProvider));
-            aelfInstances[httpProvider] = aelf;
+            let urlTemp = rpc_ip || rpc_domain;
+            let httpProvider = Array.from(this.httpProvider);
+            httpProvider[0] = httpProvider[0] || urlTemp.includes('/chain') ? urlTemp : urlTemp + '/chain';
+
+            const aelf = new Aelf(new Aelf.providers.HttpProvider(...httpProvider));
+            aelfInstances[httpProvider[0]] = aelf;
             aelf.chain.contractAtAsync(contract_address, wallet, (err, contract) => {
                 // TODO: production:ust writy log, but not throw Error.
                 if (err) {
@@ -152,6 +156,8 @@ class AelfEgg {
             this.initContractInstance(apiInfo).then(result => {
                 requestCount--;
                 requestFlow(apiInfoList, max);
+            }).catch(error => {
+                console.log('init error', error, apiInfo);
             });
         };
 
