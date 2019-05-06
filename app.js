@@ -7,22 +7,22 @@
 /* global Proxy */
 /* eslint-disable fecs-camelcase */
 
-const Aelf = require('aelf-sdk');
+const AElf = require('aelf-sdk');
 // address: 65dDNxzcd35jESiidFXN5JV8Z7pCwaFnepuYQToNefSgqk9
 const defaultPrivateKey = 'bdb3b39ef4cd18c2697a920eb6d9e8c3cf1a930570beb37d04fb52400092c42b';
-var wallet = Aelf.wallet.getWalletByPrivateKey(defaultPrivateKey);
+var wallet = AElf.wallet.getWalletByPrivateKey(defaultPrivateKey);
 
 module.exports = app => {
     if (app.config.aelf.app && !app.aelf) {
         app.aelf = {
-            Aelf,
+            AElf,
             wallet,
             instances: {},
             contractInstances: {},
             initInstance: null,
             initContractInstance: null
         };
-        const aelfEgg = new AelfEgg(app.aelf, app.config.aelf);
+        const aelfEgg = new AElfEgg(app.aelf, app.config.aelf);
 
         if (app.config.aelf.metaSource) {
             app.curl(app.config.aelf.metaSource, {
@@ -39,7 +39,7 @@ module.exports = app => {
     }
 };
 
-class AelfEgg {
+class AElfEgg {
     constructor(aelf, config) {
         this.config = JSON.parse(JSON.stringify(config));
         this.httpProvider = this.config.httpProvider;
@@ -51,7 +51,7 @@ class AelfEgg {
     initInstance(url) {
         let httpProvider = Array.from(this.httpProvider);
         httpProvider[0] = httpProvider[0] || url.includes('/chain') ? url : url + '/chain';
-        const aelf = new Aelf(new Aelf.providers.HttpProvider(...httpProvider));
+        const aelf = new AElf(new AElf.providers.HttpProvider(...httpProvider));
         this.aelf.instances[httpProvider[0]] = aelf;
     }
 
@@ -83,7 +83,7 @@ class AelfEgg {
             let httpProvider = Array.from(this.httpProvider);
             httpProvider[0] = httpProvider[0] || urlTemp.includes('/chain') ? urlTemp : urlTemp + '/chain';
 
-            const aelf = new Aelf(new Aelf.providers.HttpProvider(...httpProvider));
+            const aelf = new AElf(new AElf.providers.HttpProvider(...httpProvider));
             aelfInstances[httpProvider[0]] = aelf;
             aelf.chain.contractAtAsync(contract_address, wallet, (err, contract) => {
                 // TODO: production:ust writy log, but not throw Error.
